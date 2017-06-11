@@ -5,7 +5,8 @@ to STL.  It uses Prim's algorithm to generate the maze so it has a defined
 start.
 
 The maze is generated randomly but the start is always on the same face.
-Parameters like size, diameter, and number of nodes can be supplied.
+Parameters like size, diameter, and number of nodes can be supplied.  The end is 
+chosen by choosing the node on an outside edge that is furthest from the start.
 
 ## Usage
 
@@ -33,8 +34,17 @@ maze.py [-x 10] [-y 5] [-z 4]  [-n 10] [-d 3] [-m | -s] <output.scad>
 
 ## Pictures
 
+Default 5x5x5 maze
 
+![](/pics/skel.PNG)
 
+Solid - Default 5x5x5 maze
+
+![](/pics/solid.PNG)
+
+Mesh - Default 5x5x5 maze
+
+![](/pics/mesh.PNG)
 
 # LICENSE
 
