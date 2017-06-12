@@ -21,7 +21,7 @@
 # SOFTWARE.
 
 import random
-from random import shuffle, randint
+from random import shuffle, randint, getrandbits
 import sys
 from docopt import docopt
 
@@ -186,20 +186,22 @@ a start and an end and no loops.  Outputs openscad.
 
 Usage:
   maze.py -h
-  maze.py [-x WIDTH] [-y HEIGHT] [-z DEPTH] [-r RES] [-n SPACING] [-d DIAMETER] [-m | -s] <output.scad>
+  maze.py [-x WIDTH] [-y HEIGHT] [-z DEPTH] [-r RES] [-n SPACING] [-d DIAMETER] [-m | -s  | -t ] [-f THICK] <output.scad>
 Options:
   -h, --help                    Show this help message and exit
   -x --width WIDTH              Number of cells wide [default: 5]
   -y --height HEIGHT            Number of cells high [default: 5]
   -z --depth DEPTH              Number of cells deep [default: 5]
   -r --resolution RES           Resolution of rendering [default: 25]
-  -n --node-spacing SPACING     Distance between nodes in mm [default: 8.0]
-  -d --diameter DIAMETER        Diameter of nodes in mm [default: 6.0]
+  -n --node-spacing SPACING     Distance between nodes in mm [default: 10.0]
+  -d --diameter DIAMETER        Diameter of nodes in mm [default: 9.0]
   -m --enable-mesh              Creates a cross hatch mesh and subtracts maze from it.
   -s --enable-solid             Creates a solid cube and subtracts maze from it.
+  -t --enable-tunnel            Subtracts smaller version of maze from itself to make tunnels.
+  -f --tunnel-thickness THICK   Thickness of tunnel wall in mm. [default: 1.0]
 Examples:
 maze.py output.scad
-maze.py [-x 10] [-y 5] [-z 4]  [-n 10] [-d 3] [-m | -s] <output.scad>
+maze.py [-x 10] [-y 5] [-z 4]  [-n 10] [-d 3] [-m | -s | -t ] [-f 1.0] <output.scad>
 '''
 
 
@@ -209,12 +211,21 @@ if __name__ == "__main__":
 
     dims = [int(args['--width'][0]),int(args['--height'][0]),int(args['--depth'][0])]
 
+    seed = getrandbits(64)
+    random.seed(seed)
     m = maze(*dims, unit = float(args['--node-spacing'][0]), diameter = float(args['--diameter'][0]))
 
     if args['--enable-mesh']:
         m = cube_mesh(*dims) - m
     elif args['--enable-solid']:
         m = solid_cube(*dims) - m
+    elif args['--enable-tunnel']:
+        thickness = float(args['--tunnel-thickness'][0])
+        d = float(args['--diameter'][0])
+        ind = (d - thickness)
+        random.seed(seed)
+        m2 = maze(*dims, unit = float(args['--node-spacing'][0]), diameter = ind)
+        m -= m2
 
     out = ('$fn=%d;' % int(args['--resolution'][0]))+scad_render(m)
 
