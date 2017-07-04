@@ -8,6 +8,22 @@ The maze is generated randomly but the start is always on the same face.
 Parameters like size, diameter, and number of nodes can be supplied.  The end is 
 chosen by choosing the node on an outside edge that is furthest from the start.
 
+## Installation
+
+Install my version of Solid Python.  The official version currently has a couple bugs.
+
+```
+git clone https://github.com/conorpp/SolidPython
+cd SolidPython
+sudo python setup.py install
+```
+
+Install other pip modules
+
+```
+pip install docopt
+```
+
 ## Usage
 
 ```
@@ -27,10 +43,15 @@ Options:
   -d --diameter DIAMETER        Diameter of nodes in mm [default: 6.0]
   -m --enable-mesh              Creates a cross hatch mesh and subtracts maze from it.
   -s --enable-solid             Creates a solid cube and subtracts maze from it.
+
 Examples:
-maze.py output.scad
-maze.py [-x 10] [-y 5] [-z 4]  [-n 10] [-d 3] [-m | -s] <output.scad>
+python maze.py output.scad
+python maze.py [-x 10] [-y 5] [-z 4]  [-n 10] [-d 3] [-m | -s] <output.scad>
 ```
+
+Running the maze.py program will generate an openscad file.  Open this with an openscad version
+built after 2017.  You can find these versions right now by going to the [downloads](http://www.openscad.org/downloads.html) page
+and going to **Development Snapshots**.
 
 ## Pictures
 
